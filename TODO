@@ -1,0 +1,4 @@
+* Make I/O more robust (exception handling)
+* Make parsing more robust
+* Fix Umlaut / "\n" problems
+* Nokia E50 cannot handle entries with same names when doing vcard import. The first one seems to get overwritten. Arghh!
