@@ -31,7 +31,28 @@ import types
 VERSIONSTRING = "0.1"
 
 
-
+def makeUniqueName(text, names):
+    '''Check if text is a VCard name ("N") entry and makes this name unique if
+    already found in dict names. Background is that when multiple vcards with
+    the same name entry are imported nokia phone only creates one entry and
+    overwrites all fields with subsequent entry.
+    For vcard 2.1 standard see http://www.imc.org/pdi/vcard-21.doc'''
+    regex = re.compile("N:(?P<familyName>.*);(?P<givenName>.*);(?P<addNames>.*);(?P<namePref>.*);(?P<nameSuff>.*)")
+    result = regex.search(text)
+    # Check familyName and givenName because otherwise all entries without would be named "(0)" and so on
+    if type(result) != types.NoneType and len(result.group("familyName")) > 0 and len(result.group("givenName")) > 0:
+	simpleName = result.group("familyName") + ", " + result.group("givenName")
+	if names.has_key(simpleName):
+	    names[simpleName] = names[simpleName] + 1
+	    # I sort my contacts on phone like "familyName, surname" so not unique names would
+	    # show "familyName, surname (2)" and so on
+	    resultText = "N:%s;%s (%d);%s;%s;%s\n" % (result.group("familyName"), result.group("givenName"), names[simpleName], result.group("addNames"), result.group("namePref"), result.group("nameSuff"))
+	else:
+	    names[simpleName] = 1
+	    resultText = text
+	return resultText
+    else:
+	return text
 
 
 ########### MAIN PROGRAM #############
@@ -74,6 +95,7 @@ def main():
     line = vcardFile.readline()
     splitVcardFileName = ""
     splitVcardFile = 0
+    names = {} # track duplicate names
     i = -1
     while line != "":
 	if line.find("BEGIN:VCARD") >= 0:
@@ -89,6 +111,7 @@ def main():
 	    else:
                 # Nokia seems to default to latin1
 		line = unicode(line, "utf-8").encode("iso-8859-1")
+		line = makeUniqueName(line, names)
 		splitVcardFile.write(line)
 	line = vcardFile.readline()
 
