@@ -1,0 +1,39 @@
+nokia_e50_vcard.py
+
+Converts vcard file for import into Nokia E50
+
+Technically nokia_e50_vcard.py splits a single vcard file file into multiple
+vcard files suitable for import into the Nokia E50 phone. Additionally it
+handles some conversion issues I found out during tests. It has been tested
+with kaddressbook, so I might have done some special assumptions on how the
+vcard file is built.
+
+The background of this program is to have a possibility to regularly do a
+import of his addressbook or technically spoken a mirror. It is assumed that
+the records on the phone are neither changed nor new records are added.
+Synchronisation is completely out of scope here.
+
+Many PIM applications are capable of exporting their data base into a single
+large vcard file. Some - like KDE3 kaddressbook's - use it even as their native
+data store format. But the Nokia E50 phone can import only single vcards - one
+vcard per file. Fourtunately the phone can import all vcards in a row if they
+are stored in a special sub-directoy with the magic name "Others/Contacts" on
+the memory card.
+
+The particular steps to import your vcard (export file) from you PIM
+application are:
+
+ * Call $ ./nokia_e50_vcard.py your_vcard_file directory_to_store_single_vcards
+ * Connect your phone to the computer (USB mass storage mode) and the content
+   of copy directory_to_store_single_vcards to /yourphone/Others/Contacts.
+ * Now you can unmount and disconnect the phone from the computer
+ * Go into "Contacts" menu
+ * Call "options - mark/unmark - Mark all"
+ * Call "options - delete" to delete the whole existing address book on the
+   phone. This may take a while.
+ * Call "options - Copy - from memory card". This will import all vcard files
+   from the directory "Others/Contacts" on the memorycard. This may also take
+   some time depending on how large your address database is.
+
+Now you are done. Keep in mind that you use this script on your on risk. In
+case of doubt just read the source. :-)

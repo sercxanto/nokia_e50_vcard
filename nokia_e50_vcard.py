@@ -1,8 +1,8 @@
 #!/usr/bin/python
 #
-#    cleanup_old_files.py
+#    nokia_e50_vcard.py
 #
-#    Splits a file vcards into single vcard files suitable for Nokia E50
+#    Converts vcard file for import into Nokia E50
 #
 #    Copyright (C) 2009 Georg Lutz <georg AT NOSPAM georglutz DOT de>
 #
