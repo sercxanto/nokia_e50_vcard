@@ -98,19 +98,22 @@ def main():
     names = {} # track duplicate names
     i = -1
     while line != "":
-	if line.find("BEGIN:VCARD") >= 0:
+	if line.upper().find("BEGIN:VCARD") >= 0:
 	    i = i + 1
 	    splitVcardFileName = os.path.join(dirName,"%03d.vcf" % i)
 	    splitVcardFile = open(splitVcardFileName, "w")
 	    splitVcardFile.write(line)
 	else:
-	    if line.find("END:VCARD") >= 0:
+	    if line.upper().find("END:VCARD") >= 0:
 		splitVcardFile.write(line)
 		if type(splitVcardFile) == types.FileType and not file.closed:
 		    file.close()
 	    else:
                 # Nokia seems to default to latin1
-		line = unicode(line, "utf-8").encode("iso-8859-1")
+		try:
+		    line = unicode(line, "utf-8").encode("iso-8859-1")
+		except:
+		    pass
 		line = makeUniqueName(line, names)
 		splitVcardFile.write(line)
 	line = vcardFile.readline()
